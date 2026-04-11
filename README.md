@@ -1,4 +1,4 @@
-# Language-Modeling-from-Scratch-based-on-Stanford-CS336
+# Language-Modeling-from-Scratch
 Comprehensive implementation of LLM components: BPE, Transformer, FlashAttention (Triton), and DPO. Inspired by Stanford CS336.
 
 # 基于 Stanford CS336 的 Transformer 语言模型从零实现
