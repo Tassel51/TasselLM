@@ -26,9 +26,9 @@ from lr_cosine_shedule import CosineSchedule
 # =========================
 parser = argparse.ArgumentParser()
 parser.add_argument("--device", type=str, default="cuda:0")
-parser.add_argument("--epochs", type=int, default=50)
-parser.add_argument("--train_steps", type=int, default=2000)
-parser.add_argument("--batch_size", type=int, default=8)
+parser.add_argument("--epochs", type=int, default=80)
+parser.add_argument("--train_steps", type=int, default=3000)
+parser.add_argument("--batch_size", type=int, default=16)
 parser.add_argument("--valid_batch_size", type=int, default=2)
 parser.add_argument("--max_val_batches", type=int, default=100)
 parser.add_argument("--resume_from", type=str, default=None)
@@ -97,6 +97,7 @@ run = wandb.init(
     entity="2775297866-neu",
     project="cs336_final_train",
     config={
+        # 这些键的名字都是自己起的
         "experiment_name": f"tinystories_17M_{timestamp}",
         "total_tokens_processed": 327_680_000,
 
@@ -258,6 +259,8 @@ optimizer = AdamW(
 # =========================
 loss_fn = CrossEntropyLoss()
 
+
+# 混合精度训练：在尽可能保持模型精度的前提下，加速训练过程并减少显存占用，从而支持更大的 Batch Size 或更大的模型。
 use_amp = device.type == "cuda"
 scaler = torch.amp.GradScaler("cuda", enabled=use_amp)
 
@@ -292,22 +295,27 @@ model.train()
 
 for epoch in range(start_epoch, config["epochs"]):
     for step in range(config["train_steps"]):
+        # 根据当前的 global_step（全局步数）计算新的学习率，并手动更新优化器中的学习率。
         new_lr = lr_scheduler(global_step)
         for param_group in optimizer.param_groups:
             param_group["lr"] = new_lr
 
+        # 从数据加载器获取一个批次的数据，并将其移动到指定的计算设备（CPU 或 GPU）。.long() 将数据转换为 64 位整数。
         x, y = train_data_loader.get_train_batch_data()
         x = x.to(device).long()
         y = y.to(device).long()
 
-        optimizer.zero_grad()
 
+
+        # 混合精度训练：torch.amp.autocast 自动将部分操作转换为半精度浮点数（FP16）进行计算，同时保持关键步骤（如 Loss 计算）在单精度（FP32）下进行。
         with torch.amp.autocast("cuda", enabled=use_amp):
             logits = model(x)
             loss = loss_fn.forward(logits, y)
 
-        scaler.scale(loss).backward()
-        torch.nn.utils.clip_grad_norm_(model.parameters(), config["grad_clip"])
+        optimizer.zero_grad() # 清除过往梯度
+        scaler.scale(loss).backward() # 使用 GradScaler 缩放 Loss 以防止 FP16 下溢，然后进行反向传播计算梯度
+        torch.nn.utils.clip_grad_norm_(model.parameters(), config["grad_clip"])# 对梯度进行裁剪，限制梯度的最大范数。
+        # 反缩放梯度并更新优化器参数，同时更新缩放因子。
         scaler.step(optimizer)
         scaler.update()
 

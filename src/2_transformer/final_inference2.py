@@ -69,7 +69,7 @@ else:
 # =========================
 # 加载 checkpoint
 # =========================
-ckpt_path = "checkpoints/model_final_20260410_232054.pth"
+ckpt_path = "checkpoints\model_final_20260411_230317.pth"
 checkpoint = torch.load(ckpt_path, map_location=device)
 
 if isinstance(checkpoint, dict) and "model_state_dict" in checkpoint:
@@ -87,9 +87,8 @@ print("Model loaded successfully.")
 # 输入文本
 # =========================
 input_text = (
-    # "Once upon a time, there was a pretty girl named Lily. "
-    # "One day, Lily's mom asked her to help cook dinner."
-    "Once upon a time there was a student want to fuck a girl. "
+    "Once upon a time, there was a pretty girl named Lily. "
+    "One day, Lily's mom asked her to help cook dinner."
 )
 
 input_ids = tokenizer.encode(input_text)
