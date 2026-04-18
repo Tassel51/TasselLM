@@ -38,7 +38,7 @@ Comprehensive implementation of LLM components: BPE, Transformer, FlashAttention
 
 ---
 ## 2. Version
-### **v1.0**
+### **v1.0** （2026.4.11）
 
 该decoder-only的transformer架构的整体框架已搭建完毕，主要模块如下所示：
 1. 分词器与数据编码
@@ -76,7 +76,7 @@ Comprehensive implementation of LLM components: BPE, Transformer, FlashAttention
 
 ---
 
-##3. Architecture
+## 3. Architecture
 
 下面的文件结构根据当前项目实际目录整理，和仓库内容保持一致：
 
