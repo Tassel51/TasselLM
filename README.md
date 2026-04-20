@@ -1,4 +1,8 @@
-# Language-Modeling-from-Scratch
+# TasselLM(从零开始的大模型建模)
+[![Stanford](https://img.shields.io/badge/Stanford-CS336-8C1515?style=for-the-badge&logo=university)](https://stanford-cs336.github.io/spring2024/)
+[![深度学习](https://img.shields.io/badge/深度学习-PyTorch-EE4C2C?style=for-the-badge&logo=pytorch)](https://pytorch.org/)
+[![语言模型](https://img.shields.io/badge/语言模型-Transformers-blue?style=for-the-badge&logo=huggingface)](https://huggingface.co/docs/transformers/index)
+
 Comprehensive implementation of LLM components: BPE, Transformer, FlashAttention (Triton), and DPO. Inspired by Stanford CS336.
 
 # 基于 Stanford CS336 的 Transformer 语言模型从零实现
