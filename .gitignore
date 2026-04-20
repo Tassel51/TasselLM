@@ -91,7 +91,7 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/
+Readme/学习笔记/_build/
 
 # PyBuilder
 .pybuilder/
